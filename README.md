@@ -182,9 +182,3 @@ Simularea demonstreaza ca valoarea coeficientului de amortizare `c` controleaza 
 - `c` mare (5.0) -> revenire rapida la echilibru, comportament aproape de amortizarea critica
 
 Metoda Euler cu `dt = 0.01 s` si `n_steps = 1001` ofera rezultate corecte calitativ pentru acest sistem liniar.
-
----
-
-## Autor
-
-Proiect realizat pentru disciplina **Tehnici de Simulare a Sistemelor (TSS)**.
