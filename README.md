@@ -155,6 +155,8 @@ python main.py
 
 ### Grafic comparativ - cele 3 valori de amortizare
 
+![Grafic comparativ amortizare](images/grafic_comparativ.png)
+
 **c = 0.2 (subdampat slab, z = 0.032)**
 
 Sistemul oscileaza aproape fara pierdere de energie. Amplitudinea scade foarte lent, iar oscilatiile persista pe toata durata simulatiei (10 s). Frecventa oscilatiilor ramane aproape constanta. Acest comportament este specific sistemelor cu amortizare neglijabila, de exemplu un pendul in vid sau un resort cu frecare minima.
@@ -168,6 +170,8 @@ Amplitudinea oscilatiilor descreste vizibil mai rapid fata de cazul anterior. Si
 Desi sistemul ramane tehnic subdampat (z < 1), amortizarea este suficient de puternica incat oscilatiile dispar rapid. Sistemul revine la echilibru in cateva secunde, cu oscilatii abia vizibile. Se apropie de comportamentul unui sistem critic amortizat (`c_cr = 6.32`).
 
 ### Grafic detaliat - pozitie si viteza pentru c = 0.8
+
+![Grafic pozitie si viteza](images/grafic_detaliat.png)
 
 Graficul este generat de `plot_single_case` si contine doua subgrafice:
 
