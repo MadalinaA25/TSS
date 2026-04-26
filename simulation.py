@@ -4,20 +4,20 @@ import math
 
 def simulate_mass_spring_damper(m, c, k, x0, v0, t_max, dt):
     """
-    Simulează sistemul masă-arc-amortizor folosind metoda Euler.
+    Simuleaza sistemul masa-arc-amortizor folosind metoda Euler.
 
     Parametri:
         m     - masa
         c     - coeficient de amortizare
         k     - constanta arcului
-        x0    - poziția inițială
-        v0    - viteza inițială
+        x0    - pozitia initiala
+        v0    - viteza initiala
         t_max - timpul total de simulare
         dt    - pasul de timp
 
-    Returnează:
+    Returneaza:
         t_values - vectorul de timp
-        x_values - vectorul pozițiilor
+        x_values - vectorul pozitiilor
         v_values - vectorul vitezelor
     """
 

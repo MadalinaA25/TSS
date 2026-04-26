@@ -200,7 +200,7 @@ class TestValoriFrontiera(unittest.TestCase):
 # prin combinatia testelor de mai jos (acoperire 100%).
 # =============================================================================
 
-class TestAcoperiреInstructiuni(unittest.TestCase):
+class TestAcoperireInstructiuni(unittest.TestCase):
 
     def test_SC_all_init_lines(self):
         # Parcurge toate ramurile din __init__: m invalid, c invalid, k invalid, valid
