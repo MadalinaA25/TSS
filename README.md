@@ -538,33 +538,52 @@ t, x, v = sys.simulate(1.0, 0.0, t_max=10.0, dt=0.01)
 
 ### 6. Circuite Independente (Complexitate McCabe)
 
-Complexitatea ciclomatica V(G) = E - N + 2P determina numarul de cai liniar independente.
-Fiecare cale independenta este acoperita de cate un test separat.
+Complexitatea ciclomatica `V(G) = E - N + 2P` determina numarul de cai liniar independente.
+Fiecare cale independenta corespunde unui traseu distinct prin CFG si este acoperita de
+cate un test separat.
 
-- `__init__`: V(G) = 4 (3 cai de eroare + 1 cale de succes)
-- `simulate`: V(G) = 4 (3 cai de eroare + 1 cale de succes)
-- `get_damping_type`: V(G) = 3 (subdampat, critic, supradampat)
+- `__init__`: N=9, E=11, P=1 → **V(G) = 4** (3 cai de eroare + 1 cale de succes)
+- `simulate`: N=9, E=11, P=1 → **V(G) = 4** (3 cai de eroare + 1 cale de succes)
+- `get_damping_type`: N=8, E=9, P=1 → **V(G) = 3** (subdampat, critic, supradampat)
 
 ```python
-# Calea 1 din __init__: m invalid -> ValueError
+# __init__ Calea 1: N1→N2→N3→N9  (D1=True: m=0 → ValueError)
 with self.assertRaises(ValueError):
     MassSpringDamper(m=0.0, c=0.8, k=10.0)
 
-# Calea 2 din __init__: m valid, c invalid -> ValueError
+# __init__ Calea 2: N1→N2→N4→N5→N9  (D1=False, D2=True: c=-2 → ValueError)
 with self.assertRaises(ValueError):
     MassSpringDamper(m=1.0, c=-2.0, k=10.0)
 
-# Calea 3 din __init__: m, c valide, k invalid -> ValueError
+# __init__ Calea 3: N1→N2→N4→N6→N7→N9  (D1=False, D2=False, D3=True: k=0 → ValueError)
 with self.assertRaises(ValueError):
     MassSpringDamper(m=1.0, c=0.8, k=0.0)
 
-# Calea 4 din __init__: toti parametri valizi -> obiect creat
+# __init__ Calea 4: N1→N2→N4→N6→N8→N9  (D1=False, D2=False, D3=False: obiect creat)
 sys = MassSpringDamper(m=1.0, c=0.8, k=10.0)
 self.assertEqual(sys.m, 1.0)
 
-# Calea 4 din simulate: toti parametri valizi -> simulare completa (1001 pasi)
+# simulate Calea 1: N1→N2→N3→N9  (D4=True: t_max=0 → ValueError)
+sys.simulate(1.0, 0.0, t_max=0.0, dt=0.01)
+
+# simulate Calea 2: N1→N2→N4→N5→N9  (D4=False, D5=True: dt=0 → ValueError)
+sys.simulate(1.0, 0.0, t_max=10.0, dt=0.0)
+
+# simulate Calea 3: N1→N2→N4→N6→N7→N9  (D4=False, D5=False, D6=True: dt=t_max → ValueError)
+sys.simulate(1.0, 0.0, t_max=5.0, dt=5.0)
+
+# simulate Calea 4: N1→N2→N4→N6→N8→N9  (D4=False, D5=False, D6=False: simulare completa)
 t, x, v = sys.simulate(1.0, 0.0, 10.0, 0.01)
 self.assertEqual(len(t), 1001)
+
+# get_damping_type Calea 1: N1→N2→N3→N4→N8  (D7=True: zeta=0.126 < 1 → "subdampat")
+MassSpringDamper(1.0, 0.8, 10.0).get_damping_type()
+
+# get_damping_type Calea 2: N1→N2→N3→N5→N6→N8  (D7=False, D8=True: zeta=1.0 → "critic")
+MassSpringDamper(1.0, 2.0, 1.0).get_damping_type()
+
+# get_damping_type Calea 3: N1→N2→N3→N5→N7→N8  (D7=False, D8=False: zeta=1.58 → "supradampat")
+MassSpringDamper(1.0, 10.0, 10.0).get_damping_type()
 ```
 
 ### 7. Teste pentru Mutanti

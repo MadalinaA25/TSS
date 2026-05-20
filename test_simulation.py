@@ -397,84 +397,86 @@ class TestAcoperireConditii(unittest.TestCase):
 # =============================================================================
 # 6. CIRCUITE INDEPENDENTE (Complexitate McCabe)
 #
-# __init__: V(G) = 3 + 1 = 4 → 4 cai independente
-#   Calea 1: m<=0 → ValueError
-#   Calea 2: m>0, c<0 → ValueError
-#   Calea 3: m>0, c>=0, k<=0 → ValueError
-#   Calea 4: m>0, c>=0, k>0 → obiect creat cu succes
+# Complexitatea ciclomatica: V(G) = E - N + 2P
 #
-# simulate: V(G) = 3 + 1 = 4 → 4 cai independente
-#   Calea 1: t_max<=0 → ValueError
-#   Calea 2: t_max>0, dt<=0 → ValueError
-#   Calea 3: t_max>0, dt>0, dt>=t_max → ValueError
-#   Calea 4: toti parametri valizi → simulare reusita
+# __init__: N=9, E=11, P=1  →  V(G) = 11 - 9 + 2 = 4  → 4 cai independente
+#   Calea 1: N1→N2→N3→N9       (D1=T: m<=0 → ValueError)
+#   Calea 2: N1→N2→N4→N5→N9    (D1=F, D2=T: c<0 → ValueError)
+#   Calea 3: N1→N2→N4→N6→N7→N9 (D1=F, D2=F, D3=T: k<=0 → ValueError)
+#   Calea 4: N1→N2→N4→N6→N8→N9 (D1=F, D2=F, D3=F: obiect creat cu succes)
 #
-# get_damping_type: V(G) = 2 + 1 = 3 → 3 cai independente
-#   Calea 1: zeta < 1 → "subdampat"
-#   Calea 2: zeta == 1 → "critic"
-#   Calea 3: zeta > 1 → "supradampat"
+# simulate: N=9, E=11, P=1  →  V(G) = 11 - 9 + 2 = 4  → 4 cai independente
+#   Calea 1: N1→N2→N3→N9       (D4=T: t_max<=0 → ValueError)
+#   Calea 2: N1→N2→N4→N5→N9    (D4=F, D5=T: dt<=0 → ValueError)
+#   Calea 3: N1→N2→N4→N6→N7→N9 (D4=F, D5=F, D6=T: dt>=t_max → ValueError)
+#   Calea 4: N1→N2→N4→N6→N8→N9 (D4=F, D5=F, D6=F: simulare reusita)
+#
+# get_damping_type: N=8, E=9, P=1  →  V(G) = 9 - 8 + 2 = 3  → 3 cai independente
+#   Calea 1: N1→N2→N3→N4→N8    (D7=T: zeta < 1 → "subdampat")
+#   Calea 2: N1→N2→N3→N5→N6→N8 (D7=F, D8=T: zeta == 1 → "critic")
+#   Calea 3: N1→N2→N3→N5→N7→N8 (D7=F, D8=F: zeta > 1 → "supradampat")
 # =============================================================================
 
 class TestCircuiteIndependente(unittest.TestCase):
 
-    # __init__ Calea 1
+    # __init__ Calea 1: N1→N2→N3→N9  (D1=True: m=0 → ValueError)
     def test_IC_init_path1(self):
         with self.assertRaises(ValueError):
             MassSpringDamper(m=0.0, c=0.8, k=10.0)
 
-    # __init__ Calea 2
+    # __init__ Calea 2: N1→N2→N4→N5→N9  (D1=False, D2=True: c=-2 → ValueError)
     def test_IC_init_path2(self):
         with self.assertRaises(ValueError):
             MassSpringDamper(m=1.0, c=-2.0, k=10.0)
 
-    # __init__ Calea 3
+    # __init__ Calea 3: N1→N2→N4→N6→N7→N9  (D1=False, D2=False, D3=True: k=0 → ValueError)
     def test_IC_init_path3(self):
         with self.assertRaises(ValueError):
             MassSpringDamper(m=1.0, c=0.8, k=0.0)
 
-    # __init__ Calea 4
+    # __init__ Calea 4: N1→N2→N4→N6→N8→N9  (D1=False, D2=False, D3=False: obiect creat)
     def test_IC_init_path4(self):
         sys = MassSpringDamper(m=1.0, c=0.8, k=10.0)
         self.assertEqual(sys.m, 1.0)
         self.assertEqual(sys.c, 0.8)
         self.assertEqual(sys.k, 10.0)
 
-    # simulate Calea 1
+    # simulate Calea 1: N1→N2→N3→N9  (D4=True: t_max=0 → ValueError)
     def test_IC_simulate_path1(self):
         sys = MassSpringDamper(1.0, 0.8, 10.0)
         with self.assertRaises(ValueError):
             sys.simulate(1.0, 0.0, t_max=0.0, dt=0.01)
 
-    # simulate Calea 2
+    # simulate Calea 2: N1→N2→N4→N5→N9  (D4=False, D5=True: dt=0 → ValueError)
     def test_IC_simulate_path2(self):
         sys = MassSpringDamper(1.0, 0.8, 10.0)
         with self.assertRaises(ValueError):
             sys.simulate(1.0, 0.0, t_max=10.0, dt=0.0)
 
-    # simulate Calea 3
+    # simulate Calea 3: N1→N2→N4→N6→N7→N9  (D4=False, D5=False, D6=True: dt=t_max → ValueError)
     def test_IC_simulate_path3(self):
         sys = MassSpringDamper(1.0, 0.8, 10.0)
         with self.assertRaises(ValueError):
             sys.simulate(1.0, 0.0, t_max=5.0, dt=5.0)
 
-    # simulate Calea 4
+    # simulate Calea 4: N1→N2→N4→N6→N8→N9  (D4=False, D5=False, D6=False: simulare reusita)
     def test_IC_simulate_path4(self):
         sys = MassSpringDamper(1.0, 0.8, 10.0)
         t, x, v = sys.simulate(1.0, 0.0, 10.0, 0.01)
         self.assertEqual(len(t), 1001)
 
-    # get_damping_type Calea 1: zeta < 1
+    # get_damping_type Calea 1: N1→N2→N3→N4→N8  (D7=True: zeta=0.126 < 1 → "subdampat")
     def test_IC_damping_path1(self):
         sys = MassSpringDamper(m=1.0, c=0.8, k=10.0)
         self.assertEqual(sys.get_damping_type(), "subdampat")
 
-    # get_damping_type Calea 2: zeta == 1
+    # get_damping_type Calea 2: N1→N2→N3→N5→N6→N8  (D7=False, D8=True: zeta=1.0 → "critic")
     def test_IC_damping_path2(self):
         # m=1, k=1, c=2 → zeta = 2/(2*sqrt(1)) = 1.0
         sys = MassSpringDamper(m=1.0, c=2.0, k=1.0)
         self.assertEqual(sys.get_damping_type(), "critic")
 
-    # get_damping_type Calea 3: zeta > 1
+    # get_damping_type Calea 3: N1→N2→N3→N5→N7→N8  (D7=False, D8=False: zeta=1.58 > 1 → "supradampat")
     def test_IC_damping_path3(self):
         # m=1, k=10, c=10 → zeta = 10/(2*sqrt(10)) ≈ 1.58 > 1
         sys = MassSpringDamper(m=1.0, c=10.0, k=10.0)
