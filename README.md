@@ -398,12 +398,23 @@ biblioteca standard Python. Sunt 77 de teste organizate in 8 clase.
 
 Domeniul de intrare este impartit in clase de echivalenta valide (CV) si invalide (CI).
 Un singur reprezentant din fiecare clasa este suficient pentru a acoperi intreaga clasa.
+Clasele sunt derivate din conditiile de decizie din CFG: fiecare decizie D1..D6 separa
+domeniul in doua clase (valida si invalida).
 
-**Clase valide:** CV1 (m > 0), CV2 (c >= 0), CV3 (k > 0), CV4 (t_max > 0),
-CV5 (0 < dt < t_max)
+**Clase valide** (ramura `False` din fiecare decizie din CFG):
+- CV1: m > 0 — D1=False in CFG `__init__`
+- CV2: c >= 0 — D2=False in CFG `__init__`
+- CV3: k > 0 — D3=False in CFG `__init__`
+- CV4: t_max > 0 — D4=False in CFG `simulate`
+- CV5: 0 < dt < t_max — D5=False si D6=False in CFG `simulate`
 
-**Clase invalide:** CI1 (m <= 0), CI2 (c < 0), CI3 (k <= 0), CI4 (t_max <= 0),
-CI5 (dt <= 0), CI6 (dt >= t_max)
+**Clase invalide** (ramura `True` din fiecare decizie din CFG):
+- CI1: m <= 0 — D1=True → N2→N3 in CFG `__init__`
+- CI2: c < 0 — D2=True → N4→N5 in CFG `__init__`
+- CI3: k <= 0 — D3=True → N6→N7 in CFG `__init__`
+- CI4: t_max <= 0 — D4=True → N2→N3 in CFG `simulate`
+- CI5: dt <= 0 — D5=True → N4→N5 in CFG `simulate`
+- CI6: dt >= t_max — D6=True → N6→N7 in CFG `simulate`
 
 ```python
 # CV1-CV3: parametri valizi (reprezentant al claselor valide)
@@ -424,6 +435,12 @@ with self.assertRaises(ValueError):
 ### 2. Analiza Valorilor de Frontiera (BVA)
 
 Testele se concentreaza pe valorile exact la limita intre domeniile valid si invalid.
+Frontierele sunt identificate direct din conditiile de decizie din CFG:
+- **D1** (`m <= 0`): frontiera la m=0 — sub frontiera e invalid (CI1), peste e valid (CV1)
+- **D2** (`c < 0`): frontiera la c=0 — c=0 este valid (CV2), c=-0.001 e invalid (CI2)
+- **D3** (`k <= 0`): frontiera la k=0 — sub frontiera e invalid (CI3), peste e valid (CV3)
+- **D6** (`dt >= t_max`): frontiera la dt=t_max — egal e invalid (CI6), mai mic e valid (CV5)
+- **D7** (`zeta < 1`) si **D8** (`zeta == 1`): frontiere la zeta=1 in CFG `get_damping_type`
 
 ```python
 # Frontiera m: 0 este invalid, 0.001 este valid (primul pas dincolo de frontiera)
@@ -453,7 +470,10 @@ self.assertEqual(sys.get_damping_type(), "supradampat")
 ### 3. Acoperire la Nivel de Instructiune (Statement Coverage)
 
 Fiecare linie de cod executabila este parcursa cel putin o data in setul complet de teste.
-Acoperire 100% pentru metodele `__init__`, `simulate` si `get_damping_type`.
+Acoperire 100% inseamna ca fiecare nod din CFG a fost vizitat cel putin o data:
+- Nodurile N3, N5, N7 (raise ValueError) → acoperite de teste cu parametri invalizi
+- Nodul N8 (self.m=m / return simulate) → acoperit de teste cu parametri valizi
+- In CFG `get_damping_type`: nodurile N4, N6, N7 (return) → acoperite de cate un test pentru fiecare tip de amortizare
 
 ```python
 # Acopera toate liniile din __init__
@@ -477,10 +497,19 @@ sys.simulate(1.0, 0.0, t_max=10.0, dt=0.01)   # linia: return simulate_mass_spri
 
 ### 4. Acoperire la Nivel de Decizie (Decision Coverage)
 
-Fiecare instructiune `if` este evaluata atat cu `True` cat si cu `False`.
+Fiecare instructiune `if` din CFG este evaluata atat cu `True` cat si cu `False`.
+Deciziile sunt exact muchiile din CFG etichetate T/F:
 
-Decizii acoperite: D1 (m <= 0), D2 (c < 0), D3 (k <= 0), D4 (t_max <= 0),
-D5 (dt <= 0), D6 (dt >= t_max), D7 (zeta < 1), D8 (zeta == 1).
+| Decizie | Conditie        | Metoda             | Nod CFG | T → | F → |
+|---------|-----------------|--------------------|---------|-----|-----|
+| D1      | m <= 0          | `__init__`         | N2      | N3  | N4  |
+| D2      | c < 0           | `__init__`         | N4      | N5  | N6  |
+| D3      | k <= 0          | `__init__`         | N6      | N7  | N8  |
+| D4      | t_max <= 0      | `simulate`         | N2      | N3  | N4  |
+| D5      | dt <= 0         | `simulate`         | N4      | N5  | N6  |
+| D6      | dt >= t_max     | `simulate`         | N6      | N7  | N8  |
+| D7      | zeta < 1        | `get_damping_type` | N3      | N4  | N5  |
+| D8      | zeta == 1       | `get_damping_type` | N5      | N6  | N7  |
 
 ```python
 # D1 = True: m = 0
@@ -509,7 +538,11 @@ self.assertEqual(sys3.get_damping_type(), "supradampat")
 ### 5. Acoperire la Nivel de Conditie (Condition Coverage)
 
 Fiecare conditie atomica (subexpresie booleana) ia valoarea `True` si `False`
-independent de celelalte conditii.
+independent de celelalte conditii. Spre deosebire de Decision Coverage (care testeaza
+doar rezultatul final al unui `if`), Condition Coverage testeaza fiecare sub-conditie
+individual — relevant mai ales daca un `if` ar contine expresii compuse (`and`, `or`).
+In acest cod fiecare `if` are o singura conditie atomica, deci conditiile C1..C8
+corespund exact deciziilor D1..D8 din CFG.
 
 ```python
 # C1 (m <= 0) = True: m negativ
