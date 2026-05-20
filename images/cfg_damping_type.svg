@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="770" style="background:#FDFEFE">
+  <defs>
+    <marker id="arr" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#333333"/>
+    </marker>
+    <marker id="arr-red" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#C0392B"/>
+    </marker>
+    <marker id="arr-green" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#1E8449"/>
+    </marker>
+  </defs>
+  <text x="300" y="28" text-anchor="middle" font-size="14" font-weight="bold" font-family="Arial" fill="#1a1a1a">CFG: MassSpringDamper.get_damping_type()</text>
+  <text x="300" y="46" text-anchor="middle" font-size="12" font-family="Arial" fill="#555555">N=8  E=9  P=1  →  V(G) = 9 − 8 + 2·1 = 3</text>
+  <rect x="135" y="67" width="120" height="36" rx="18" fill="#D5F5E3" stroke="#1E8449" stroke-width="1.5"/>
+  <text x="195" y="90" text-anchor="middle" font-size="13" font-weight="bold" font-family="Arial" fill="#1a1a1a">N1: START</text>
+  <rect x="80" y="156" width="230" height="38" rx="4" fill="#D6EAF8" stroke="#2874A6" stroke-width="1.5"/>
+  <text x="195" y="179.0" text-anchor="middle" font-size="11" font-family="monospace" fill="#1a1a1a">N2: zeta = c / (2 * sqrt(m*k))</text>
+  <polygon points="195,251 283,280 195,309 107,280" fill="#FDEBD0" stroke="#E67E22" stroke-width="1.5"/>
+  <text x="195" y="285" text-anchor="middle" font-size="12" font-weight="bold" font-family="Arial" fill="#1a1a1a">N3: if zeta &lt; 1</text>
+  <rect x="368" y="258" width="155" height="44" rx="4" fill="#A9DFBF" stroke="#1E8449" stroke-width="1.5"/>
+  <text x="445" y="276.5" text-anchor="middle" font-size="11" font-family="monospace" fill="#1a1a1a">N4: return</text>
+  <text x="445" y="291.5" text-anchor="middle" font-size="11" font-family="monospace" fill="#1a1a1a">"subdampat"</text>
+  <polygon points="195,361 283,390 195,419 107,390" fill="#FDEBD0" stroke="#E67E22" stroke-width="1.5"/>
+  <text x="195" y="395" text-anchor="middle" font-size="12" font-weight="bold" font-family="Arial" fill="#1a1a1a">N5: if zeta == 1</text>
+  <rect x="375" y="368" width="140" height="44" rx="4" fill="#A9DFBF" stroke="#1E8449" stroke-width="1.5"/>
+  <text x="445" y="386.5" text-anchor="middle" font-size="11" font-family="monospace" fill="#1a1a1a">N6: return</text>
+  <text x="445" y="401.5" text-anchor="middle" font-size="11" font-family="monospace" fill="#1a1a1a">"critic"</text>
+  <rect x="113" y="478" width="165" height="44" rx="4" fill="#A9DFBF" stroke="#1E8449" stroke-width="1.5"/>
+  <text x="195" y="496.5" text-anchor="middle" font-size="11" font-family="monospace" fill="#1a1a1a">N7: return</text>
+  <text x="195" y="511.5" text-anchor="middle" font-size="11" font-family="monospace" fill="#1a1a1a">"supradampat"</text>
+  <rect x="135" y="607" width="120" height="36" rx="18" fill="#D5F5E3" stroke="#1E8449" stroke-width="1.5"/>
+  <text x="195" y="630" text-anchor="middle" font-size="13" font-weight="bold" font-family="Arial" fill="#1a1a1a">N8: END</text>
+  <line x1="195" y1="103" x2="195" y2="156" stroke="#333333" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="195" y1="194" x2="195" y2="251" stroke="#333333" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="283" y1="280" x2="367" y2="280" stroke="#333333" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="287" y="274" font-size="11" font-weight="bold" font-family="Arial" fill="#7D3C98">T</text>
+  <line x1="195" y1="309" x2="195" y2="361" stroke="#333333" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="199" y="335" font-size="11" font-weight="bold" font-family="Arial" fill="#7D3C98">F</text>
+  <line x1="283" y1="390" x2="374" y2="390" stroke="#333333" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="287" y="384" font-size="11" font-weight="bold" font-family="Arial" fill="#7D3C98">T</text>
+  <line x1="195" y1="419" x2="195" y2="478" stroke="#333333" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="199" y="448" font-size="11" font-weight="bold" font-family="Arial" fill="#7D3C98">F</text>
+  <line x1="195" y1="522" x2="195" y2="607" stroke="#333333" stroke-width="1.5" marker-end="url(#arr)"/>
+  <path d="M 523 280 C 560 280 560 625 258 625" stroke="#1E8449" stroke-width="1.3" fill="none" stroke-dasharray="5,3" marker-end="url(#arr-green)"/>
+  <path d="M 516 390 C 550 390 550 625 258 625" stroke="#1E8449" stroke-width="1.3" fill="none" stroke-dasharray="5,3" marker-end="url(#arr-green)"/>
+  <rect x="15" y="653" width="440" height="84" rx="6" fill="#EBF5FB" stroke="#2874A6" stroke-width="1"/>
+  <text x="23" y="668" font-size="11" font-family="monospace" fill="#1a1a1a">Cai independente (baza V(G)=3):</text>
+  <text x="23" y="685" font-size="11" font-family="monospace" fill="#1a1a1a">  P1: N1→N2→N3→N4→N8    (zeta &lt; 1  → "subdampat")</text>
+  <text x="23" y="702" font-size="11" font-family="monospace" fill="#1a1a1a">  P2: N1→N2→N3→N5→N6→N8  (zeta = 1  → "critic")</text>
+  <text x="23" y="719" font-size="11" font-family="monospace" fill="#1a1a1a">  P3: N1→N2→N3→N5→N7→N8  (zeta &gt; 1  → "supradampat")</text>
+</svg>

@@ -253,10 +253,146 @@ def simulate(self, x0, v0, t_max, dt):
 
 ---
 
+## Grafuri de Flux de Control (CFG)
+
+Grafurile de flux de control (Control Flow Graph) reprezinta structura logica a codului
+sub forma de noduri (blocuri de instructiuni) si muchii orientate (transferuri de control).
+Ele stau la baza calculului complexitatii ciclomatice McCabe si a derivarii cailor de test
+independente.
+
+**Formula complexitatii ciclomatice:**
+
+```
+V(G) = E − N + 2P
+```
+
+unde:
+- `E` = numarul de muchii (edges)
+- `N` = numarul de noduri (nodes)
+- `P` = numarul de componente conexe (1 pentru un singur program)
+
+`V(G)` indica numarul minim de cazuri de test necesare pentru a acoperi toate circuitele
+independente (caile de baza) din program.
+
+---
+
+### CFG: `__init__(m, c, k)`
+
+Metoda contine 3 decizii secventiale (guards pentru m, c, k) plus o cale de succes.
+
+```
+N1: START
+N2: if m <= 0          ← decizie D1
+N3: raise ValueError   ← m invalid
+N4: if c < 0           ← decizie D2
+N5: raise ValueError   ← c invalid
+N6: if k <= 0          ← decizie D3
+N7: raise ValueError   ← k invalid
+N8: self.m=m; self.c=c; self.k=k
+N9: END
+```
+
+**Muchii:** N1→N2, N2→N3(T), N2→N4(F), N3→N9, N4→N5(T), N4→N6(F),
+N5→N9, N6→N7(T), N6→N8(F), N7→N9, N8→N9
+
+**N=9, E=11, P=1 → V(G) = 11 − 9 + 2 = 4**
+
+![CFG __init__](images/cfg_init.svg)
+
+Cele 4 cai independente (baza McCabe):
+
+| Cale | Traseu              | Test acoperitor                      |
+|------|---------------------|--------------------------------------|
+| P1   | N1→N2→N3→N9        | `m=0` → ValueError                  |
+| P2   | N1→N2→N4→N5→N9     | `m=1, c=-1` → ValueError            |
+| P3   | N1→N2→N4→N6→N7→N9  | `m=1, c=0.8, k=0` → ValueError      |
+| P4   | N1→N2→N4→N6→N8→N9  | `m=1, c=0.8, k=10` → obiect valid   |
+
+---
+
+### CFG: `get_damping_type()`
+
+Metoda contine 2 decizii pentru clasificarea in 3 categorii de amortizare.
+
+```
+N1: START
+N2: zeta = c / (2 · √(m · k))
+N3: if zeta < 1        ← decizie D7
+N4: return "subdampat"
+N5: if zeta == 1       ← decizie D8
+N6: return "critic"
+N7: return "supradampat"
+N8: END
+```
+
+**Muchii:** N1→N2, N2→N3, N3→N4(T), N3→N5(F), N4→N8, N5→N6(T), N5→N7(F), N6→N8, N7→N8
+
+**N=8, E=9, P=1 → V(G) = 9 − 8 + 2 = 3**
+
+![CFG get_damping_type](images/cfg_damping_type.svg)
+
+Cele 3 cai independente:
+
+| Cale | Traseu                  | Conditie          | Test acoperitor                    |
+|------|-------------------------|-------------------|------------------------------------|
+| P1   | N1→N2→N3→N4→N8         | zeta < 1          | `c=0.8, m=1, k=10` → "subdampat"  |
+| P2   | N1→N2→N3→N5→N6→N8      | zeta = 1          | `c=2, m=1, k=1` → "critic"        |
+| P3   | N1→N2→N3→N5→N7→N8      | zeta > 1          | `c=10, m=1, k=10` → "supradampat" |
+
+---
+
+### CFG: `simulate(x0, v0, t_max, dt)`
+
+Metoda contine 3 decizii de validare secventiale (guards pentru t_max, dt, dt vs t_max).
+
+```
+N1: START
+N2: if t_max <= 0      ← decizie D4
+N3: raise ValueError   ← t_max invalid
+N4: if dt <= 0         ← decizie D5
+N5: raise ValueError   ← dt invalid
+N6: if dt >= t_max     ← decizie D6
+N7: raise ValueError   ← dt >= t_max
+N8: return simulate_mass_spring_damper(...)
+N9: END
+```
+
+**Muchii:** N1→N2, N2→N3(T), N2→N4(F), N3→N9, N4→N5(T), N4→N6(F),
+N5→N9, N6→N7(T), N6→N8(F), N7→N9, N8→N9
+
+**N=9, E=11, P=1 → V(G) = 11 − 9 + 2 = 4**
+
+![CFG simulate](images/cfg_simulate.svg)
+
+Cele 4 cai independente:
+
+| Cale | Traseu              | Test acoperitor                           |
+|------|---------------------|-------------------------------------------|
+| P1   | N1→N2→N3→N9        | `t_max=0` → ValueError                   |
+| P2   | N1→N2→N4→N5→N9     | `dt=0` → ValueError                      |
+| P3   | N1→N2→N4→N6→N7→N9  | `dt=t_max` → ValueError                  |
+| P4   | N1→N2→N4→N6→N8→N9  | `t_max=10, dt=0.01` → simulare completa  |
+
+---
+
+### Rezumat complexitate ciclomatica
+
+| Metoda              | N  | E  | P | V(G) | Cai independente |
+|---------------------|----|----|---|------|-----------------|
+| `__init__`          | 9  | 11 | 1 |  4   | P1..P4          |
+| `get_damping_type`  | 8  |  9 | 1 |  3   | P1..P3          |
+| `simulate`          | 9  | 11 | 1 |  4   | P1..P4          |
+| **Total**           |    |    |   | **11** |               |
+
+Testele din clasa `TestCircuiteIndependente` (sectiunea 6 din `test_simulation.py`)
+acopera explicit fiecare cale independenta derivata din CFG-urile de mai sus.
+
+---
+
 ## Strategii de Testare
 
 Testele sunt implementate in `test_simulation.py` folosind modulul `unittest` din
-biblio-teca standard Python. Sunt 77 de teste organizate in 8 clase.
+biblioteca standard Python. Sunt 77 de teste organizate in 8 clase.
 
 ### 1. Partitionare in Clase de Echivalenta
 
@@ -497,6 +633,17 @@ pip install numpy matplotlib
 ```bash
 python main.py
 ```
+
+### Generare Grafuri CFG
+
+```bash
+python generate_cfg.py
+```
+
+Genereaza grafurile de flux de control in directorul `images/`:
+- `images/cfg_init.svg` — CFG pentru `__init__`
+- `images/cfg_damping_type.svg` — CFG pentru `get_damping_type`
+- `images/cfg_simulate.svg` — CFG pentru `simulate`
 
 ### Rulare Teste
 

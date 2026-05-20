@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="650" height="840" style="background:#FDFEFE">
+  <defs>
+    <marker id="arr" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#333333"/>
+    </marker>
+    <marker id="arr-red" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#C0392B"/>
+    </marker>
+    <marker id="arr-green" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#1E8449"/>
+    </marker>
+  </defs>
+  <text x="325" y="28" text-anchor="middle" font-size="14" font-weight="bold" font-family="Arial" fill="#1a1a1a">CFG: MassSpringDamper.__init__(m, c, k)</text>
+  <text x="325" y="46" text-anchor="middle" font-size="12" font-family="Arial" fill="#555555">N=9  E=11  P=1  →  V(G) = 11 − 9 + 2·1 = 4</text>
+  <rect x="140" y="67" width="120" height="36" rx="18" fill="#D5F5E3" stroke="#1E8449" stroke-width="1.5"/>
+  <text x="200" y="90" text-anchor="middle" font-size="13" font-weight="bold" font-family="Arial" fill="#1a1a1a">N1: START</text>
+  <polygon points="200,151 288,180 200,209 112,180" fill="#FDEBD0" stroke="#E67E22" stroke-width="1.5"/>
+  <text x="200" y="185" text-anchor="middle" font-size="12" font-weight="bold" font-family="Arial" fill="#1a1a1a">N2: if m &lt;= 0</text>
+  <rect x="376" y="155" width="198" height="50" rx="6" fill="#FADBD8" stroke="#C0392B" stroke-width="1.5"/>
+  <text x="475" y="176.0" text-anchor="middle" font-size="11" font-family="Arial" fill="#922B21">N3: raise ValueError</text>
+  <text x="475" y="192.0" text-anchor="middle" font-size="11" font-family="Arial" fill="#922B21">"m trebuie &gt; 0"</text>
+  <polygon points="200,271 288,300 200,329 112,300" fill="#FDEBD0" stroke="#E67E22" stroke-width="1.5"/>
+  <text x="200" y="305" text-anchor="middle" font-size="12" font-weight="bold" font-family="Arial" fill="#1a1a1a">N4: if c &lt; 0</text>
+  <rect x="376" y="275" width="198" height="50" rx="6" fill="#FADBD8" stroke="#C0392B" stroke-width="1.5"/>
+  <text x="475" y="296.0" text-anchor="middle" font-size="11" font-family="Arial" fill="#922B21">N5: raise ValueError</text>
+  <text x="475" y="312.0" text-anchor="middle" font-size="11" font-family="Arial" fill="#922B21">"c trebuie &gt;= 0"</text>
+  <polygon points="200,391 288,420 200,449 112,420" fill="#FDEBD0" stroke="#E67E22" stroke-width="1.5"/>
+  <text x="200" y="425" text-anchor="middle" font-size="12" font-weight="bold" font-family="Arial" fill="#1a1a1a">N6: if k &lt;= 0</text>
+  <rect x="376" y="395" width="198" height="50" rx="6" fill="#FADBD8" stroke="#C0392B" stroke-width="1.5"/>
+  <text x="475" y="416.0" text-anchor="middle" font-size="11" font-family="Arial" fill="#922B21">N7: raise ValueError</text>
+  <text x="475" y="432.0" text-anchor="middle" font-size="11" font-family="Arial" fill="#922B21">"k trebuie &gt; 0"</text>
+  <rect x="118" y="519" width="165" height="52" rx="4" fill="#D6EAF8" stroke="#2874A6" stroke-width="1.5"/>
+  <text x="200" y="534.0" text-anchor="middle" font-size="11" font-family="monospace" fill="#1a1a1a">N8: self.m = m</text>
+  <text x="200" y="549.0" text-anchor="middle" font-size="11" font-family="monospace" fill="#1a1a1a">self.c = c</text>
+  <text x="200" y="564.0" text-anchor="middle" font-size="11" font-family="monospace" fill="#1a1a1a">self.k = k</text>
+  <rect x="140" y="652" width="120" height="36" rx="18" fill="#D5F5E3" stroke="#1E8449" stroke-width="1.5"/>
+  <text x="200" y="675" text-anchor="middle" font-size="13" font-weight="bold" font-family="Arial" fill="#1a1a1a">N9: END</text>
+  <line x1="200" y1="103" x2="200" y2="151" stroke="#333333" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="288" y1="180" x2="375" y2="180" stroke="#333333" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="292" y="174" font-size="11" font-weight="bold" font-family="Arial" fill="#7D3C98">T</text>
+  <line x1="200" y1="209" x2="200" y2="271" stroke="#333333" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="204" y="240" font-size="11" font-weight="bold" font-family="Arial" fill="#7D3C98">F</text>
+  <line x1="288" y1="300" x2="375" y2="300" stroke="#333333" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="292" y="294" font-size="11" font-weight="bold" font-family="Arial" fill="#7D3C98">T</text>
+  <line x1="200" y1="329" x2="200" y2="391" stroke="#333333" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="204" y="360" font-size="11" font-weight="bold" font-family="Arial" fill="#7D3C98">F</text>
+  <line x1="288" y1="420" x2="375" y2="420" stroke="#333333" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="292" y="414" font-size="11" font-weight="bold" font-family="Arial" fill="#7D3C98">T</text>
+  <line x1="200" y1="449" x2="200" y2="519" stroke="#333333" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="204" y="484" font-size="11" font-weight="bold" font-family="Arial" fill="#7D3C98">F</text>
+  <line x1="200" y1="571" x2="200" y2="652" stroke="#333333" stroke-width="1.5" marker-end="url(#arr)"/>
+  <path d="M 575 180 C 630 180 630 670 263 670" stroke="#C0392B" stroke-width="1.3" fill="none" stroke-dasharray="5,3" marker-end="url(#arr-red)"/>
+  <path d="M 575 300 C 620 300 620 670 263 670" stroke="#C0392B" stroke-width="1.3" fill="none" stroke-dasharray="5,3" marker-end="url(#arr-red)"/>
+  <path d="M 575 420 C 610 420 610 670 263 670" stroke="#C0392B" stroke-width="1.3" fill="none" stroke-dasharray="5,3" marker-end="url(#arr-red)"/>
+  <rect x="15" y="698" width="440" height="101" rx="6" fill="#EBF5FB" stroke="#2874A6" stroke-width="1"/>
+  <text x="23" y="713" font-size="11" font-family="monospace" fill="#1a1a1a">Cai independente (baza V(G)=4):</text>
+  <text x="23" y="730" font-size="11" font-family="monospace" fill="#1a1a1a">  P1: N1→N2→N3→N9            (m invalid → ValueError)</text>
+  <text x="23" y="747" font-size="11" font-family="monospace" fill="#1a1a1a">  P2: N1→N2→N4→N5→N9         (c invalid → ValueError)</text>
+  <text x="23" y="764" font-size="11" font-family="monospace" fill="#1a1a1a">  P3: N1→N2→N4→N6→N7→N9      (k invalid → ValueError)</text>
+  <text x="23" y="781" font-size="11" font-family="monospace" fill="#1a1a1a">  P4: N1→N2→N4→N6→N8→N9      (toti valizi → obiect creat)</text>
+</svg>
